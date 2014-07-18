@@ -1,7 +1,11 @@
 mindplay/filereflection
 =======================
 
-This library complements the PHP reflection API with the missing ReflectionFile class.
+https://github.com/mindplay-dk/filereflection
+
+This library complements the PHP [reflection API](http://dk1.php.net/manual/en/book.reflection.php) with the missing ReflectionFile class.
+
+[![Build Status](https://travis-ci.org/mindplay-dk/filereflection.png)](https://travis-ci.org/mindplay-dk/filereflection)
 
 A few other libraries were available to do this already, but this one implements an
 important feature missing from other implementations I could find: resolution of local
