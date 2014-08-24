@@ -74,6 +74,31 @@ test(
 
         eq($file->getClass('Baz')->getName(), 'Other\World\Baz', 'resolves unqualified local name when calling getClass()');
         eq($file->getClass('Fud')->getName(), 'Other\World\Nib', 'resolves unqualified local name when calling getClass()');
+
+        eq($file->resolveName('string'), 'string', 'resolves psuedo-type name string (without modification)');
+    }
+);
+
+test(
+    'throws for invalid argument to getClass()',
+    function () {
+        $file = new ReflectionFile(__DIR__ . '/test.B.php_');
+
+        expect(
+            'InvalidArgumentException',
+            'should throw if passing a simple pseudo-type name',
+            function () use ($file) {
+                $class = $file->getClass('string');
+            }
+        );
+
+        expect(
+            'InvalidArgumentException',
+            'should throw if passing an undefined class-name',
+            function () use ($file) {
+                $class = $file->getClass('Blah');
+            }
+        );
     }
 );
 
@@ -157,8 +182,7 @@ function expect($exception_type, $why, $function)
 function format($value, $verbose = false)
 {
     if ($value instanceof Exception) {
-        return get_class($value)
-        . ($verbose ? ": \"" . $value->getMessage() . "\"" : '');
+        return get_class($value) . ": \"" . $value->getMessage() . "\"";
     }
 
     if (! $verbose && is_array($value)) {

@@ -3,6 +3,7 @@
 namespace mindplay\filereflection;
 
 use ReflectionClass;
+use InvalidArgumentException;
 
 /**
  * This class complements the PHP reflection API with the missing file reflector.
@@ -196,22 +197,62 @@ class ReflectionFile
     /**
      * @param string $name unqualified (or fully-qualified) class-name
      *
+     * @throws InvalidArgumentException if a class with the resolved name does not exist
+     *
      * @return ReflectionClass
      */
     public function getClass($name)
     {
-        $name = substr($this->resolveName($name), 1);
+        if ($this->isSimpleType($name)) {
+            throw new InvalidArgumentException("simple pseudo-type name '$name' was given");
+        }
+
+        $name = ltrim($this->resolveName($name), '\\');
+
+        if (! class_exists($name, true)) {
+            throw new InvalidArgumentException("class '$name' does not exist'");
+        }
 
         return new ReflectionClass($name);
     }
 
     /**
+     * @param string $name type-name
+     *
+     * @return bool true, if the given type-name is a simple PHP pseudo-type ('array', 'string', 'bool', etc.)
+     */
+    public function isSimpleType($name)
+    {
+        static $types = array(
+            'array',
+            'bool',
+            'boolean',
+            'callback',
+            'double',
+            'float',
+            'int',
+            'integer',
+            'mixed',
+            'number',
+            'object',
+            'string',
+            'void',
+        );
+
+        return in_array($name, $types);
+    }
+
+    /**
      * @param string $name unqualified (or fully-qualified) type-name
      *
-     * @return string fully-qualified type-name (with a leading backslash)
+     * @return string fully-qualified type-name (with a leading backslash for non-pseudo-types)
      */
     public function resolveName($name)
     {
+        if ($this->isSimpleType($name)) {
+            return $name; // return pseudo-type as-is
+        }
+
         $qualified = substr_compare($name, '\\', 0, 1) === 0;
 
         if ($qualified) {
