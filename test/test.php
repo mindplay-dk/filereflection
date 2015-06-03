@@ -25,7 +25,7 @@ class MockCache implements CacheProvider
     /**
      * @inheritdoc
      */
-    public function read($key, $timestamp, callable $refresh)
+    public function read($key, $timestamp, $refresh)
     {
         if (isset($this->cache[$key]) && $this->time[$key] >= $timestamp) {
             $this->hit += 1;

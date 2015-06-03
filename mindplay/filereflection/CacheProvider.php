@@ -19,5 +19,5 @@ interface CacheProvider
      *
      * @return mixed cached data
      */
-    public function read($key, $timestamp, callable $refresh);
+    public function read($key, $timestamp, $refresh);
 }
