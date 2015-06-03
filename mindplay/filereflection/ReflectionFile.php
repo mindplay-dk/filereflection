@@ -57,16 +57,10 @@ class ReflectionFile
         $this->_path = $path;
 
         if ($cache) {
-            $self = $this;
-
             $array = $cache->read(
                 $path,
                 filemtime($path),
-                function () use ($self) {
-                    $self->load();
-
-                    return $self->getArray();
-                }
+                array($this, 'getArray')
             );
 
             $this->setArray($array);
@@ -183,9 +177,13 @@ class ReflectionFile
 
     /**
      * @return array internal state (for caching purposes)
+     *
+     * @ignore
      */
-    protected function getArray()
+    public function getArray()
     {
+        $this->load();
+
         return array(
             $this->_namespace,
             $this->_uses,
