@@ -12,6 +12,9 @@
 	"require": {
 		"php": ">=5.3.0"
 	},
+    "require-dev": {
+        "mindplay/benchpress": "*@dev"
+    },
 	"autoload": {
 		"psr-0": {
 			"mindplay\\filereflection": ""
