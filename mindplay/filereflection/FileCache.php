@@ -26,6 +26,7 @@ class FileCache implements CacheProvider
     public function __construct($root, $file_mode = 0777)
     {
         $this->root = $root;
+        $this->file_mode = $file_mode;
     }
 
     /**
@@ -50,7 +51,9 @@ class FileCache implements CacheProvider
 
         $data = call_user_func($refresh);
 
-        file_put_contents($path, '<?php return ' . var_export($data, true) . ';');
+        $this->write($path, '<?php return ' . var_export($data, true) . ';');
+
+        touch($path, $timestamp);
 
         return $data;
     }
@@ -69,9 +72,9 @@ class FileCache implements CacheProvider
 
         $file_written = @file_put_contents($path, $data) !== false;
 
-        $mode_set = @chmod($path, $this->file_mode) !== false;
-
         umask($mask);
+
+        $mode_set = @chmod($path, $this->file_mode) !== false;
 
         if (false === $file_written) {
             throw new RuntimeException("unable to write cache file: {$path}");

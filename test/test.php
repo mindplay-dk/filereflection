@@ -176,6 +176,44 @@ test(
     }
 );
 
+test(
+    'can manage file cache',
+    function () {
+        $root = __DIR__ . '/build/cache';
+
+        foreach (glob("{$root}/*.php") as $path) {
+            unlink($path); // clean up old cache file
+        }
+
+        $cache = new FileCache($root);
+
+        $KEY = 'TEST_KEY';
+
+        $DATA = array('true' => true);
+
+        $calls = 0;
+
+        $refresh = function () use (&$calls, $DATA) {
+            $calls += 1;
+            return $DATA;
+        };
+
+        $now = time();
+
+        eq($cache->read($KEY, $now, $refresh), $DATA, 'it generates missing data');
+        eq($calls, 1, 'first call triggered by missing data');
+
+        eq($cache->read($KEY, $now, $refresh), $DATA, 'it delivers cached data');
+        eq($calls, 1, 'subsequent call does not trigger refresh');
+
+        eq($cache->read($KEY, $now-1, $refresh), $DATA, 'it delivers cached data');
+        eq($calls, 1, 'past timestamp does not trigger refresh');
+
+        eq($cache->read($KEY, $now+1, $refresh), $DATA, 'it generates new data');
+        eq($calls, 2, 'future timestamp triggers refresh');
+    }
+);
+
 exit(status());
 
 // https://gist.github.com/mindplay-dk/4260582
