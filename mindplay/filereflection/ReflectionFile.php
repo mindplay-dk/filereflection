@@ -5,6 +5,9 @@ namespace mindplay\filereflection;
 use ReflectionClass;
 use InvalidArgumentException;
 
+// Only available in PHP >= 8.0
+defined('T_NAME_QUALIFIED') || define('T_NAME_QUALIFIED', 20210603);
+
 /**
  * This class complements the PHP reflection API with the missing file reflector.
  */
@@ -238,7 +241,7 @@ class ReflectionFile
                     break;
 
                 case self::NAMESPACE_NAME:
-                    if ($type == T_STRING || $type == T_NS_SEPARATOR) {
+                    if ($type == T_STRING || $type == T_NS_SEPARATOR || $type == T_NAME_QUALIFIED) {
                         $namespace .= $str;
                     } else {
                         if ($str == ';') {
@@ -252,7 +255,7 @@ class ReflectionFile
                     if ($type == T_AS) {
                         $use_as = '';
                         $state = self::USE_CLAUSE_AS;
-                    } elseif ($type == T_STRING || $type == T_NS_SEPARATOR) {
+                    } elseif ($type == T_STRING || $type == T_NS_SEPARATOR || $type == T_NAME_QUALIFIED) {
                         $use .= $str;
                     } elseif ($type === self::CHAR) {
                         if ($str === ',' || $str === ';') {
@@ -269,7 +272,7 @@ class ReflectionFile
                     break;
 
                 case self::USE_CLAUSE_AS:
-                    if ($type === T_STRING || $type === T_NS_SEPARATOR) {
+                    if ($type === T_STRING || $type === T_NS_SEPARATOR || $type === T_NAME_QUALIFIED) {
                         $use_as .= $str;
                     } elseif ($type === self::CHAR) {
                         if ($str === ',' || $str === ';') {
