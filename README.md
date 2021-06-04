@@ -5,7 +5,7 @@ https://github.com/mindplay-dk/filereflection
 
 This library complements the PHP [reflection API](http://dk1.php.net/manual/en/book.reflection.php) with the missing ReflectionFile class.
 
-[![Build Status](https://travis-ci.org/mindplay-dk/filereflection.png)](https://travis-ci.org/mindplay-dk/filereflection)
+![Build Status](https://github.com/mindplay-dk/filereflection/actions/workflows/tests.yml/badge.svg)
 
 A few other libraries were available to do this already, but this one implements an
 important feature missing from other implementations I could find: resolution of local
