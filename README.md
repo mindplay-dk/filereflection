@@ -1,6 +1,10 @@
 mindplay/filereflection
 =======================
 
+#### ⚠️ DEPRECATED ⚠️ ####
+
+> Consider using [`Roave/BetterReflection`](https://github.com/Roave/BetterReflection) instead.
+
 https://github.com/mindplay-dk/filereflection
 
 This library complements the PHP [reflection API](http://dk1.php.net/manual/en/book.reflection.php) with the missing ReflectionFile class.
